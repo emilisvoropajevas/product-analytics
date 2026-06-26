@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
+import UploadPanel from "../../components/UploadPanel"
+
 export const Route = createFileRoute("/_layout/")({
     component: Dashboard,
     head: () => ({
@@ -20,17 +22,17 @@ export const Route = createFileRoute("/_layout/")({
 
 
 function Dashboard() {
-    const [uploadPanel, showUploadPanel] = useState(false);
+    const [uploadCard, showUploadCard] = useState(false);
     return (
-        <div className="bg-white border-b border-gray-200 px-6 py-8">
-            <h1 className="text-4xl font-medium">Welcome Back, Admin</h1>
-            <div className="flex gap-2 text-black rounded-full py-2">
-                <button type="button" onClick={() => showUploadPanel(prev => !prev)} className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-700">Upload CSV data</button>
-                {uploadPanel && <div>
-                    
-                    </div>}
-                <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm">New Report</button>
+        <div>
+            <div className="bg-white border-b border-gray-200 px-6 py-8">
+                <h1 className="text-4xl font-medium">Welcome Back, Admin</h1>
+                <div className="flex gap-2 text-black rounded-full py-2">
+                    <button type="button" onClick={() => showUploadCard(prev => !prev)} className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-700">Upload CSV data</button>
+                    <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm">New Report</button>
+                </div>
             </div>
+            {uploadCard && <UploadPanel/>}
         </div>
     )
 }
