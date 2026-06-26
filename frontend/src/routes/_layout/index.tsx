@@ -20,29 +20,15 @@ export const Route = createFileRoute("/_layout/")({
 
 
 function Dashboard() {
-
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-
     return (
-       <div>
-        
-       </div>
+        <div className="bg-white border-b border-gray-200 px-6 py-8">
+            <h1 className="text-4xl font-medium">Welcome Back, Admin</h1>
+            <div className="flex gap-2 text-black rounded-full py-2">
+                <button className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-700">Upload CSV data</button>
+                <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm">New Report</button>
+            </div>
+        </div>
     )
 }
 
-/* 
-
-
-        <div className="relative ml-3 flex justify-end">
-            <button type="button" onClick={() => setIsMenuOpen(prev => !prev)} className="relative rounded-full p-1 text-gray-400 hover:text-black">
-                <div className="size-8 rounded-full outline -outline-offset-1 outline-white/10">
-                    Admin
-                </div>
-                
-            </button>
-            {isMenuOpen && <div className="overflow-hidden border-b border-border/50 absolute">
-            <p>Logout</p> 
-                </div>}
-        </div>
-        
-        */
+/* Finish on clicks for buttons, could render those in components */

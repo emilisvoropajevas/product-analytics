@@ -36,12 +36,12 @@ function Login() {
         if (loginMutation.isPending) return
         loginMutation.mutate({ username, password })        
     }
-// Add cat image above h2 tag later
+
     return (
-        <div className="min-h-screen bg-linear-to-br from-blue-100 to-purple-100 flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-md w-full transform transition-all hover:scale-105 duration-300">
-                <div className="bg-linear-to-r from-blue-500 to-purple-600 p-6">
-                    <h2 className="text-white text-2xl font-bold text-center">Welcome Back</h2>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl overflow-hidden max-w-md w-full transform">
+                <div className="bg-gray-900 p-6">
+                    <h2 className="text-white text-2xl font-bold text-center">Welcome</h2>
                 </div>
 
                 <div className="p-6">
@@ -62,15 +62,13 @@ function Login() {
                             <label className="block text-gray-700 text-sm font-medium mb-2">
                                 Password
                             </label>
-                            <input id="password" type="text" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-                            placeholder="--------" //This needs to change to show *** on typing password with (showpassword function)
+                            <input id="password" type="password" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                             value={password}
                             onChange={(e) => {setPassword(e.target.value)}}
                             required
                             />
                         </div>
-
-                        <button type="submit" className="w-full py-2 px-4 bg-linear-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                        <button type="submit" disabled={loginMutation.isPending} className="w-full py-2 px-4 bg-gray-900 text-white rounded-lg hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
                             Log in
                         </button>
                     </form>
