@@ -22,7 +22,7 @@ client.setConfig({
 
 const handleApiError = (error: Error) => {
   if (isAxiosError(error) && [401, 403].includes(error.response?.status ?? 0)) {
-    localStorage.removeItem("access-token")
+    localStorage.removeItem("access_token")
     window.location.href = '/login'
   } 
 }

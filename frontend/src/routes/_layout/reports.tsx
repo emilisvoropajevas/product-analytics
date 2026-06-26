@@ -12,8 +12,9 @@ export const Route = createFileRoute("/_layout/reports")({
 })
 
 function Reports() {
-    return 
+    return (
     <div>
         This is the report plots page with functionality
     </div>
+    )
 }

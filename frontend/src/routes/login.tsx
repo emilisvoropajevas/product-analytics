@@ -2,7 +2,6 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from 'sonner'
 
-import catImage from "../assets/overlooking-cat.png"
 import useAuth, {isLoggedIn} from "../hooks/useAuth";
 
 export const Route = createFileRoute("/login")({
