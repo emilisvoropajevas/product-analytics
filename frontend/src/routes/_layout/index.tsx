@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_layout/")({
     component: Dashboard,
@@ -19,12 +20,29 @@ export const Route = createFileRoute("/_layout/")({
 
 
 function Dashboard() {
-    return (
-        <div className="flex flex-row items-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-tr shadow-lg ml-auto">
-                <span className="text-xl font-bold tracking-wider text-black">Admin</span>
-            </div>
 
-        </div>
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    return (
+       <div>
+        
+       </div>
     )
 }
+
+/* 
+
+
+        <div className="relative ml-3 flex justify-end">
+            <button type="button" onClick={() => setIsMenuOpen(prev => !prev)} className="relative rounded-full p-1 text-gray-400 hover:text-black">
+                <div className="size-8 rounded-full outline -outline-offset-1 outline-white/10">
+                    Admin
+                </div>
+                
+            </button>
+            {isMenuOpen && <div className="overflow-hidden border-b border-border/50 absolute">
+            <p>Logout</p> 
+                </div>}
+        </div>
+        
+        */
