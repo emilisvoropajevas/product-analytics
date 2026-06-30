@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-import { X } from "lucide-react"
+import { X, FileText } from "lucide-react"
 
 import useUpload from "../hooks/useUpload"
 
@@ -8,7 +8,6 @@ interface UploadPanelProps {
 }
 
 export default function UploadPanel({ onClose } : UploadPanelProps) {
-    const [stage, setStage] = useState<1 | 2 | 3>(1)
     const [file, setFile] = useState<File | null>(null)
     const [headers, setHeaders] = useState<string[]>([])
     const [previewRows, setPreviewRows] = useState<string[][]>([])
@@ -20,8 +19,22 @@ export default function UploadPanel({ onClose } : UploadPanelProps) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg w-full max-w-xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h2>Upload CSV</h2>
+                    <h2 className="text-sm font-medium">Upload CSV</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X/></button>
+                </div>
+                <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-400 px-6 py-10">
+                <div className="text-center">
+                  <div className="mt-4 flex text-sm/6 text-gray-400">
+                  <label htmlFor="file-upload" className="relative cursor-pointer rounded-md bg-transparent font-semibold text-indigo-400 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-indigo-500 hover:text-indigo-300">
+                    <FileText className="mx-auto size-10 text-gray-400"/>
+                    <span>Select File (.csv only)</span>
+                    <input id="file-upload" type="file" name="file-upload" accept=".csv" className="sr-only"></input>
+                  </label>
+                  </div>
+
+                </div>
+
+
                 </div>
             </div>
         </div>
