@@ -2,16 +2,43 @@ import { useRef, useState } from "react"
 import { X, FileText } from "lucide-react"
 
 import useUpload from "../hooks/useUpload"
+import type { Upload } from "../client-axios"
 
 interface UploadPanelProps {
-    onClose: () => void
+    onClose: () => void,
 }
+/// singl file uploads only allowed -> if two files uploaded -> reject both files immediately, reupload
 
-export default function UploadPanel({ onClose } : UploadPanelProps) {
-    const [file, setFile] = useState<File | null>(null)
+export default function UploadPanel({ onClose} : UploadPanelProps) {
+    const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+    const [isUploading, setIsUploading] = useState(false)
+    const [isDragActive, setIsDragActive] = useState<boolean>(false)
+
+
     const [headers, setHeaders] = useState<string[]>([])
     const [previewRows, setPreviewRows] = useState<string[][]>([])
 
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      setIsDragActive(true)
+    }
+
+    const handleDragExit = (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      setIsDragActive(false)
+    }
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      setIsDragActive(false)
+      if (e.dataTransfer.files.length > 0) {
+        const singleFile = Array.from(e.dataTransfer.files)[0]
+        setUploadedFile(singleFile)
+      }
+
+
+    }
 
 
 
@@ -22,7 +49,12 @@ export default function UploadPanel({ onClose } : UploadPanelProps) {
                     <h2 className="text-sm font-medium">Upload CSV</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X/></button>
                 </div>
-                <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-400 px-6 py-10">
+                <div className={`mt-2 flex justify-center rounded-lg border border-dashed border-gray-400 px-6 py-10
+                  ${isDragActive ? "bg-gray-200 border-gray-700" : "border-gray-300"}`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragExit}
+                  onDrop={handleDrop}
+                  >
                 <div className="text-center">
                   <div className="mt-4 flex text-sm/6 text-gray-400">
                   <label htmlFor="file-upload" className="relative cursor-pointer rounded-md bg-transparent font-semibold text-indigo-400 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-indigo-500 hover:text-indigo-300">
@@ -33,6 +65,7 @@ export default function UploadPanel({ onClose } : UploadPanelProps) {
                   </div>
 
                 </div>
+                {uploadedFile && <p>{uploadedFile.name}</p>}
 
 
                 </div>
