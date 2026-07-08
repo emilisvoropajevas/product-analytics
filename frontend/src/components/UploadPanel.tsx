@@ -126,6 +126,29 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
                     </div>
                 )}
 
+                {stage === 3 && (
+                  <div>
+                    {uploadMutation.isSuccess && (() => {
+                      const result = uploadMutation.data?.data as unknown as {total_successful: number, total_failed: number, data: any[]}
+                      console.log(result)
+                      return (
+                        <div>
+                          <p className="font-medium mb-3">Upload complete</p>
+                          <p className="text-green-600">{result.total_successful} chunks succeeded</p>
+                          {result.total_failed > 0 && <p className="text-red-500">{result.total_failed} chunks failed</p>}
+                          <div className="mt-4 space-y-2 max-h-48 overflow-y-auto">
+                            {result.data.map((s: any, i: number) => (
+                              <div key={i} className={`text-xs px-3 py-2 rounded-md ${s.status === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>
+                                Rows {s.row_start}–{s.row_end}: {s.status === "success" ? `${s.inserted_rows} rows inserted` : s.reason}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })()}
+                  </div>
+                )}
+
 
                   
 
@@ -144,7 +167,7 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
                     </button>
                   )}
                   {stage === 2 && (
-                    <button onClick={() => uploadMutation.mutate({file: uploadedFile! })}
+                    <button onClick={() => uploadMutation.mutate({file: uploadedFile! }, {onSuccess: () => setStage(3)})}
                     disabled={uploadMutation.isPending}
                     className="ml-auto bg-gray-900 text-white px-4 py-2 rounded-md text-sm disabled:opacity-50">
                       {uploadMutation.isPending ? "Uploading..." : "Upload"}
@@ -156,10 +179,10 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
                     </button>
                   )}
                 </div>
-
-
           </div>      
-          </div>
+      </div>
     )
 
 }
+
+/// Everything works plus upload, addition - render all details in a separate section using the UploadedStatus data Model
