@@ -71,7 +71,7 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
 
   return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg w-full max-w-xl p-6">
+          <div className="bg-white rounded-lg w-full max-w-5xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-medium">Upload CSV</h2>
               <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X/></button>
@@ -101,7 +101,30 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
                         <X size={14}/>
                       </button>
                     </div>)}
-                  </div>)}
+                  </div>
+                )}
+                  {stage === 2 && (
+                    <div className="overflow-x-auto max-h-96">
+                        <table className="w-full text-sm border-collapse">
+                            <thead>
+                                <tr className="bg-gray-50">
+                                    {headers.map((h,i) => (
+                                        <th key={i} className="text-left px-3 py-2 border border-gray-200 font-medium text-gray-700">{h}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {previewRows.map((row, i) => (
+                                    <tr key={i} className="hover:bg-gray-50">
+                                        {row.map((cell, j) => (
+                                            <td key={j} className="px-3 py-2 border border-gray-200 text-gray-600">{cell}</td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
 
 
                   
