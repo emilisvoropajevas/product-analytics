@@ -71,34 +71,42 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
 
   return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg w-full max-w-xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-sm font-medium">Upload CSV</h2>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X/></button>
-                </div>
-                {stage === 1 && <div>
-                  <div className={`mt-2 flex justify-center rounded-lg border border-dashed border-gray-400 px-6 py-10
-                  ${isDragActive ? "bg-gray-200 border-gray-700" : "border-gray-300"}`}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragExit}
-                  onDrop={handleDrop}
-                  >
-                <div className="text-center">
-                  <div className="mt-4 flex text-sm/6 text-gray-400">
-                  <label htmlFor="file-upload" className="relative cursor-pointer rounded-md bg-transparent font-semibold text-indigo-400 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-indigo-500 hover:text-indigo-300">
-                    <FileText className="mx-auto size-10 text-gray-400"/>
-                    <span>Select File (.csv only)</span>
-                    <input id="file-upload" type="file" name="file-upload" accept=".csv" className="sr-only"></input>
-                  </label>
-                  </div>
+          <div className="bg-white rounded-lg w-full max-w-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-sm font-medium">Upload CSV</h2>
+              <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X/></button>
+              </div>
+              {stage === 1 && (
+                <div>{!uploadedFile ? (
+                  <div className={`mt-2 flex justify-center rounded-lg border border-dashed px-6 py-10
+                    ${isDragActive ? "bg-gray-200 border-gray-700" : "border-gray-300"}`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragExit}
+                    onDrop={handleDrop}>
+                      <div className="text-center">
+                        <label htmlFor="file-upload" className="cursor-pointer font-semibold text-gray-600 hover:text-indigo-300">
+                          <FileText className="mx-auto size-10 text-gray-400"/>
+                          <span className="text-sm">Select File (.csv only)</span>
+                          <input id="file-upload" type="file" accept=".csv" className="sr-only" onChange={handleFileChange}/>
+                      </label>
+                      </div>
+                  </div>) : (
+                    <div className="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg bg-gray-50">
+                      <FileText className="size-5 text-gray-400 shrink-0"/>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-700 truncate">{uploadedFile.name}</p>
+                        <p className="text-xs text-gray-400">{(uploadedFile.size / 1024).toFixed(1)} KB</p>
+                      </div>
+                      <button onClick={() => setUploadedFile(null)} className="text-gray-400 hover:text-gray-600">
+                        <X size={14}/>
+                      </button>
+                    </div>)}
+                  </div>)}
 
-                </div>
-                {uploadedFile && <p>{uploadedFile.name}</p>}
 
+                  
 
-                </div>
-                </div>}
-                
+                      
                 <div className="flex justify-between mt-6">
                   {stage === 2 && (
                     <button onClick={() => setStage(1)} className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm">
@@ -127,37 +135,8 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
                 </div>
 
 
-
-
-      
+          </div>      
           </div>
-
-        </div>
     )
 
 }
-/// Upload Button
-
-/* 
-
-<div className={`mt-2 flex justify-center rounded-lg border border-dashed border-gray-400 px-6 py-10
-                  ${isDragActive ? "bg-gray-200 border-gray-700" : "border-gray-300"}`}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragExit}
-                  onDrop={handleDrop}
-                  >
-                <div className="text-center">
-                  <div className="mt-4 flex text-sm/6 text-gray-400">
-                  <label htmlFor="file-upload" className="relative cursor-pointer rounded-md bg-transparent font-semibold text-indigo-400 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-indigo-500 hover:text-indigo-300">
-                    <FileText className="mx-auto size-10 text-gray-400"/>
-                    <span>Select File (.csv only)</span>
-                    <input id="file-upload" type="file" name="file-upload" accept=".csv" className="sr-only"></input>
-                  </label>
-                  </div>
-
-                </div>
-                {uploadedFile && <p>{uploadedFile.name}</p>}
-
-
-                </div>
-*/
