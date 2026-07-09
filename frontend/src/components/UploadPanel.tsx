@@ -1,14 +1,13 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { X, FileText } from "lucide-react"
 import { toast } from 'sonner'
 
 import useUpload from "../hooks/useUpload"
-import type { Upload } from "../client-axios"
+import type { UploadStatusResponse } from "../hooks/useUpload"
 
 interface UploadPanelProps {
     onClose: () => void,
 }
-/// singl file uploads only allowed -> if two files uploaded -> reject both files immediately, reupload
 
 export default function UploadPanel({ onClose} : UploadPanelProps) {
   const [stage, setStage] = useState<1 | 2 | 3>(1)
@@ -126,33 +125,37 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
                     </div>
                 )}
 
-                {stage === 3 && (
-                  <div>
-                    {uploadMutation.isSuccess && (() => {
-                      const result = uploadMutation.data?.data as unknown as {total_successful: number, total_failed: number, data: any[]}
-                      console.log(result)
-                      return (
-                        <div>
-                          <p className="font-medium mb-3">Upload complete</p>
-                          <p className="text-green-600">{result.total_successful} chunks succeeded</p>
-                          {result.total_failed > 0 && <p className="text-red-500">{result.total_failed} chunks failed</p>}
-                          <div className="mt-4 space-y-2 max-h-48 overflow-y-auto">
-                            {result.data.map((s: any, i: number) => (
-                              <div key={i} className={`text-xs px-3 py-2 rounded-md ${s.status === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>
-                                Rows {s.row_start}–{s.row_end}: {s.status === "success" ? `${s.inserted_rows} rows inserted` : s.reason}
-                              </div>
-                            ))}
-                          </div>
+                {stage === 3 && uploadMutation.isSuccess && (() => {
+                    const result = uploadMutation.data?.data as unknown as UploadStatusResponse
+                    const allSucceeded = result.total_failed === 0
+                    return (
+                        <div className="space-y-4">
+                            <div className={`p-4 rounded-lg ${allSucceeded ? "bg-green-50 border border-green-200" : "bg-yellow-50 border border-yellow-200"}`}>
+                                <p className={`font-medium text-sm ${allSucceeded ? "text-green-700" : "text-yellow-700"}`}>
+                                    {allSucceeded ? "Upload Complete": "Upload Partial Success"}
+                                </p>
+                                <div className="mt-2 flex gap-4 text-xs">
+                                    <span className="text-green-600">✓ {result.total_successful} chunks succeeded</span>
+                                    {result.total_failed > 0 && <span className="text-red-500">✗ {result.total_failed} chunks failed</span>}
+                                </div>
+                            </div>
+
+                            <details className="border border-gray-200 rounded-lg">
+                                <summary className="px-4 py-3 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50">
+                                    View Details ({result.data.length} total)
+                                </summary>
+                                <div className="divide-y divide-gray-100 max-h-48 overflow-y-auto">
+                                    {result.data.map((s,i) => (
+                                        <div key={i} className={`px-4 py-2 text-xs flex justify-between ${s.status === "Success" ? "text-green-700" : "text-red-600"}`}>
+                                            <span>Chunk {s.chunk} · rows {s.row_start}–{s.row_end}</span>
+                                            <span>{s.status === "Success" ? `${s.inserted_rows} rows inserted` : s.reason}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </details>
                         </div>
-                      )
-                    })()}
-                  </div>
-                )}
-
-
-                  
-
-                      
+                    )
+                })()}                      
                 <div className="flex justify-between mt-6">
                   {stage === 2 && (
                     <button onClick={() => setStage(1)} className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm">
@@ -184,5 +187,3 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
     )
 
 }
-
-/// Everything works plus upload, addition - render all details in a separate section using the UploadedStatus data Model

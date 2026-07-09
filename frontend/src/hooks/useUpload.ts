@@ -8,16 +8,16 @@ import {
 } from "../client-axios";
 import { extractErrorMessage } from "../utils";
 
-interface UploadStatus {
+export interface UploadStatus {
     chunk: number
-    status: "success" | "failed"
+    status: "Success" | "Failed"
     inserted_rows: number
     reason: string | null
     row_start: number
     row_end: number
 }
 
-interface UploadStatusResponse {
+export interface UploadStatusResponse {
     total_successful: number
     total_failed: number
     data: Array<UploadStatus>
