@@ -46,5 +46,3 @@ def clean_and_format_csv(csv_file):
 
         })
         yield report_chunk.to_dict(orient="records")
-
-#Adjust to return chunks of data for large batch uploading

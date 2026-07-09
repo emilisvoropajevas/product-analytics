@@ -25,18 +25,21 @@ async def upload_to_db(file: UploadFile, session: SessionDep, current_user: Curr
     success = 0
     failed = 0
     chunk_status = []
-    for i, chunk in enumerate(chunks):
-        row_start = i + 1
-        row_end = i + len(chunk)
-        try:
-            upload_chunk = upload_orders(session=session, orders_in=chunk)
-            success += 1
-            status = UploadStatus(chunk=row_start, status=Status.success, inserted_rows=upload_chunk["inserted_rows"], reason=None, row_start=row_start, row_end=row_end)
-            chunk_status.append(status)
-        except SQLAlchemyError as e:
-            failed += 1
-            status = UploadStatus(chunk=row_start, status=Status.failed, inserted_rows=0, reason= str(e), row_start=row_start, row_end=row_end)
-            chunk_status.append(status)
+    try :
+        for i, chunk in enumerate(chunks):
+            row_start = i + 1
+            row_end = i + len(chunk)
+            try:
+                upload_chunk = upload_orders(session=session, orders_in=chunk)
+                success += 1
+                status = UploadStatus(chunk=row_start, status=Status.success, inserted_rows=upload_chunk["inserted_rows"], reason=None, row_start=row_start, row_end=row_end)
+                chunk_status.append(status)
+            except SQLAlchemyError as e:
+                failed += 1
+                status = UploadStatus(chunk=row_start, status=Status.failed, inserted_rows=0, reason= str(e), row_start=row_start, row_end=row_end)
+                chunk_status.append(status)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
 
     if success > 0 and failed > 0:
         return JSONResponse(status_code=207, content=UploadStatusResponse(total_successful=success, total_failed=failed, data=chunk_status).model_dump())

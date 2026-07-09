@@ -1,9 +1,10 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { X, FileText } from "lucide-react"
 import { toast } from 'sonner'
 
 import useUpload from "../hooks/useUpload"
 import type { UploadStatusResponse } from "../hooks/useUpload"
+import type { AxiosError } from "axios"
 
 interface UploadPanelProps {
     onClose: () => void,
@@ -67,6 +68,13 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
       processFile(e.target.files[0])
     }
   }
+
+  useEffect(() => {
+    /// Cleanup if component un-mounts
+    return () => {
+      uploadMutation.reset()
+    }
+  }, [])
 
   return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -139,7 +147,6 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
                                     {result.total_failed > 0 && <span className="text-red-500">✗ {result.total_failed} chunks failed</span>}
                                 </div>
                             </div>
-
                             <details className="border border-gray-200 rounded-lg">
                                 <summary className="px-4 py-3 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50">
                                     View Details ({result.data.length} total)
@@ -155,7 +162,33 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
                             </details>
                         </div>
                     )
-                })()}                      
+                })()}
+
+                {stage === 3 && uploadMutation.isError  && (() => {
+                  const axiosError = uploadMutation.error as AxiosError<{ detail?: string}>
+                  const errorDetail = axiosError.response?.data?.detail || "Unexpected error occured, try again later"
+                  return (
+                    <div className="space-y-4">
+                      <div className="p-4 rounded-lg bg-red-50 border border-red-200">
+                        <p className="font-medium text-sm text-red-700">
+                          Upload Failed
+                        </p>
+
+                      </div>
+                      <details className="border border-gray-200 rounded-lg">
+                        <summary className="px-4 py-3 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50">
+                          View Details
+                        </summary>
+                        <div className="divide-y divide-gray-100 max-h-48 overflow-y-auto">
+                          <div className="px-4 py-2 text-xs flex justify-between text-red-600">
+                            <span>{errorDetail}</span>
+                          </div>
+                        </div>
+                      </details>
+                    </div>
+                  )
+                })()}
+
                 <div className="flex justify-between mt-6">
                   {stage === 2 && (
                     <button onClick={() => setStage(1)} className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm">
@@ -170,20 +203,27 @@ export default function UploadPanel({ onClose} : UploadPanelProps) {
                     </button>
                   )}
                   {stage === 2 && (
-                    <button onClick={() => uploadMutation.mutate({file: uploadedFile! }, {onSuccess: () => setStage(3)})}
+                    <button onClick={() => uploadMutation.mutate({file: uploadedFile! }, {onSettled: () => setStage(3)})}
                     disabled={uploadMutation.isPending}
                     className="ml-auto bg-gray-900 text-white px-4 py-2 rounded-md text-sm disabled:opacity-50">
                       {uploadMutation.isPending ? "Uploading..." : "Upload"}
                     </button>
                   )}
-                  {stage === 3 && (
+                  {stage === 3 && uploadMutation.isSuccess && (
                     <button onClick={onClose} className="ml-auto bg-gray-900 text-white px-4 py-2 rounded-md text-sm">
                       Close
+                    </button>
+                  )}
+                  {stage === 3 && uploadMutation.isError && (
+                    <button onClick={() => setStage(1)} className="ml-auto bg-gray-900 text-white px-4 py-2 rounded-md text-sm">
+                      Try Again
                     </button>
                   )}
                 </div>
           </div>      
       </div>
     )
-
 }
+/// Add Error handling display
+/// Tidy up upload box display
+/// Toast error rendering

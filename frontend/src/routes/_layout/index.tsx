@@ -40,3 +40,5 @@ function Dashboard() {
 // Add full data summary table
 // Upload CSV -> Component that opens uploads data, shows successfull entries
 // add functionality to delete orders
+
+/// For future -> will implement multiple users, will add credentials display
