@@ -1,8 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 
-// Import future components
-
 import useAuth, { isLoggedIn } from "../hooks/useAuth";
 
 export const Route = createFileRoute("/_layout")({
