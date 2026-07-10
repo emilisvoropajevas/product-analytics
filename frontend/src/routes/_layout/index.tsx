@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
-import useReports from "../../hooks/useReports";
 import UploadPanel from "../../components/UploadPanel"
+import ReportsPanel from "../../components/ReportsPanel";
 
 export const Route = createFileRoute("/_layout/")({
     component: Dashboard,
@@ -24,10 +24,6 @@ export const Route = createFileRoute("/_layout/")({
 function Dashboard() {
     const [uploadCard, setUploadCard] = useState(false);
 
-    const { reportQuery } = useReports()
-
-    const reports = reportQuery.data ?? []
-
     return (
         <div>
             <div className="bg-white border-b border-gray-200 px-6 py-8">
@@ -39,31 +35,7 @@ function Dashboard() {
             </div>
             {uploadCard && <UploadPanel onClose={() => setUploadCard(false)}/>}
                 <div className="grid grid-cols-2 gap-6 p-6">
-                    <div className="bg-white border border-gray-200 rounded-lg p-4">
-                        <h3 className="text-sm font-medium text-gray-700 mb-3">Reports</h3>
-                        {reportQuery.isLoading && <p className="text-sm text-gray-400">Loading...</p>}
-                        {reportQuery.isError && <p className="text-sm text-red-500">Failed to load reports</p>}
-                        {reports.length === 0 && !reportQuery.isLoading && (
-                            <p className="text-sm text-gray-400">No reports yet</p>
-                        )}
-                        <div className="space-y-2">
-                            {reports.map(r => (
-                                <div key={r.id} className="flex items-center justify-between px-3 py-2 border border-gray-100 rounded-md hover:bg-gray-50">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-700">{r.name}</p>
-                                        <p className="text-xs text-gray-400">{r.model_range} {new Date(r.date_range_start).toLocaleDateString()} - {new Date(r.date_range_end).toLocaleDateString()}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-
-
-
-
-
-
+                    <ReportsPanel/>
                     <div className="grid grid-rows-2 gap-6 p-6">
                         <div className="bg-white border border-gray-200 rounded-lg p-4">
                             Summary Table 1
