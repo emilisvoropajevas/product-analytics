@@ -5,8 +5,6 @@ import type { AxiosError } from "axios"
 
 import useFetchOrders from "../hooks/useFetchOrders"
 import useCreateReport from "../hooks/useCreateReport"
-import { Orders } from "../client-axios"
-import type { OrdersPublic } from "../client-axios"
 import { extractErrorMessage } from "../utils"
 
 interface CreateReportPanelProps {
