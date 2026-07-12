@@ -1,13 +1,16 @@
 from collections.abc import Generator
 
+import uuid
 import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session, delete
 
 from app.core.db import engine, init_db
+from app.crud import create_user
 from app.main import app
 from app.models import Orders, Reports
-from tests.utils.utils import get_superuser_token_headers
+from app.schemas import UserCreate
+from tests.utils.utils import get_superuser_token_headers, get_user_token_headers, generate_random_password
 from tests.utils.seed_order_data import raw_test_data
 
 @pytest.fixture(scope="session", autouse=True)
@@ -38,3 +41,12 @@ def client() -> Generator[TestClient, None, None]:
 @pytest.fixture(scope="module")
 def superuser_token_headers(client: TestClient) -> dict[str,str]:
     return get_superuser_token_headers(client)
+
+@pytest.fixture(scope="module")
+def normal_user_token_headers(client: TestClient, db: Session) -> Generator[dict[str,str], None, None]:
+    username = f"normal_user_{uuid.uuid4().hex[:8]}"
+    password = generate_random_password()
+    user = create_user(session=db, user_create=UserCreate(username=username, password=password))
+    yield get_user_token_headers(client, username, password)
+    db.delete(user)
+    db.commit()

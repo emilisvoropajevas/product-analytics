@@ -37,6 +37,7 @@ class UploadStatusResponse(BaseModel):
     data: list[UploadStatus]
 
 class OrdersPublic(SQLModel):
+    id : int
     order_id: int
     order_date: datetime
     product_sku: str
@@ -44,6 +45,12 @@ class OrdersPublic(SQLModel):
     price: float
     qty_ordered: float
     model_range : str
+
+class DeleteOrdersRequest(SQLModel):
+    ids: list[int]
+
+class DeleteOrdersResponse(SQLModel):
+    deleted: int
 
 class CreateReport(SQLModel):
     name: Annotated[str, AfterValidator(empty_name)]
@@ -67,6 +74,12 @@ class ReportPublicWithData(ReportPublic):
 class UserCreate(SQLModel):
     username: str
     password: str
+
+class UserUpdate(SQLModel):
+    username: Annotated[str | None, AfterValidator(empty_name)] = None
+    password: str | None = None
+    is_active: bool | None = None
+    is_superuser: bool | None = None
 
 class UserPublic(SQLModel):
     id: uuid.UUID

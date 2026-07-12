@@ -17,3 +17,8 @@ def init_db(session: Session) -> None:
             password=settings.FIRST_SUPERUSER_PASSWORD,
         )
         user = crud.create_user(session=session, user_create=user_in)
+    if not user.is_superuser:
+        user.is_superuser = True
+        session.add(user)
+        session.commit()
+        session.refresh(user)

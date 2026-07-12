@@ -1,10 +1,13 @@
+import uuid
 from datetime import datetime
 from sqlmodel import Session, select
+from sqlalchemy import delete, func
 from sqlalchemy.dialects.postgresql import insert
+
 
 from app.core.security import get_password_hash, verify_password
 from app.models import User, Reports, Orders
-from app.schemas import CreateReport, UserCreate
+from app.schemas import CreateReport, UserCreate, UserUpdate
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
     db_obj = User.model_validate(
@@ -19,6 +22,32 @@ def get_user_by_username(*, session: Session, username: str) -> User | None:
     statement = select(User).where(User.username == username)
     session_user = session.exec(statement).first()
     return session_user
+
+def get_users(*, session: Session) -> list[User]:
+    statement = select(User)
+    return session.exec(statement).all()
+
+def get_user_by_id(*, session: Session, user_id: uuid.UUID) -> User | None:
+    return session.get(User, user_id)
+
+def update_user(*, session: Session, db_user: User, user_in: UserUpdate) -> User:
+    user_data = user_in.model_dump(exclude_unset=True)
+    if "password" in user_data:
+        password = user_data.pop("password")
+        user_data["hashed_password"] = get_password_hash(password)
+    db_user.sqlmodel_update(user_data)
+    session.add(db_user)
+    session.commit()
+    session.refresh(db_user)
+    return db_user
+
+def delete_user(*, session: Session, user_id: uuid.UUID) -> bool:
+    user = session.get(User, user_id)
+    if not user:
+        return False
+    session.delete(user)
+    session.commit()
+    return True
 
 # Dummy hash to use for timing attack prevention when user is not found
 # This is an Argon2 hash of a random password, used to ensure constant-time comparison
@@ -64,6 +93,12 @@ def read_orders(*, session: Session, model_range: str | None = None, sku: str | 
     else:
         statement = statement.order_by(Orders.order_date.desc()).limit(default_show_records)
     return session.exec(statement).all()
+
+def delete_orders(*, session: Session, ids: list[int]) -> int:
+    statement = delete(Orders).where(Orders.id.in_(ids))
+    result = session.exec(statement)
+    session.commit()
+    return result.rowcount
 
 #Report interactions
 def create_report(*, session: Session, report_in: CreateReport) -> Reports:
