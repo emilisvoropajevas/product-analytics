@@ -23,7 +23,7 @@ function Layout() {
     return (
         <div className="min-h-screen">
             <nav className="flex items-center justify-between px-6 h-12 bg-gray-900 text-white font-bold">
-                <span>Product Analytics</span>
+                <Link to="/">Product Analytics</Link>
                 <div className="relative">
                     <button onClick={() => setIsMenuOpen(prev => !prev)} className="rounded-full w-8 h-8 bg-blue-300 text-blue-700 text-sm font-medium">
                         {currentUserQuery.data ? getInitials(currentUserQuery.data.username) : "··"}
