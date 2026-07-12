@@ -83,7 +83,7 @@ export default function CreateReportPanel({ onClose }: CreateReportPanelProps) {
                                 SKU <span className="text-gray-400">(optional)</span>
                             </label>
                             <input type="text" value={sku} onChange={e => setSku(e.target.value)} onBlur={e => setSku(e.target.value.trim())}
-                            placeholder="e.g. ABC-f"
+                            placeholder="e.g. ABC-f (include -f)"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"/>
                         </div>
                         <button onClick={handlePreview} disabled={isPreviewing}

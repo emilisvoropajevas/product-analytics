@@ -4,7 +4,6 @@ from sqlmodel import Session, select
 from sqlalchemy import delete, func
 from sqlalchemy.dialects.postgresql import insert
 
-
 from app.core.security import get_password_hash, verify_password
 from app.models import User, Reports, Orders
 from app.schemas import CreateReport, UserCreate, UserUpdate
@@ -79,19 +78,18 @@ def upload_orders(*, session: Session, orders_in: list[dict]) -> dict:
     return {"inserted_rows": result.rowcount}
 
 def read_orders(*, session: Session, model_range: str | None = None, sku: str | None = None, start_date: datetime | None = None, end_date: datetime | None = None) -> list[Orders]:
-    default_show_records = 20
     statement = select(Orders)
+
     if model_range:
         statement = statement.where(Orders.model_range == model_range)
     if sku:
-        statement = statement.where(Orders.product_sku == sku)
+        statement = statement.where(Orders.product_sku.ilike(f"%{sku}%"))
     if start_date and end_date:
         statement = statement.where(
             Orders.order_date >= start_date,
             Orders.order_date <= end_date,
         )
-    else:
-        statement = statement.order_by(Orders.order_date.desc()).limit(default_show_records)
+    statement = statement.order_by(Orders.order_date.asc())
     return session.exec(statement).all()
 
 def delete_orders(*, session: Session, ids: list[int]) -> int:
