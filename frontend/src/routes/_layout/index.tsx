@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import UploadPanel from "../../components/UploadPanel"
 import ReportsPanel from "../../components/ReportsPanel";
+import CreateReportPanel from "../../components/CreateReportPanel";
 
 export const Route = createFileRoute("/_layout/")({
     component: Dashboard,
@@ -22,7 +23,9 @@ export const Route = createFileRoute("/_layout/")({
 
 
 function Dashboard() {
-    const [uploadCard, setUploadCard] = useState(false);
+    const [uploadCard, setUploadCard] = useState(false)
+
+    const [isCreateRerportOpen, setIsCreateReportOpen] = useState(false)
 
     return (
         <div>
@@ -30,9 +33,10 @@ function Dashboard() {
                 <h1 className="text-4xl font-medium">Welcome Back, Admin</h1>
                 <div className="flex gap-2 text-black rounded-full py-2">
                     <button type="button" onClick={() => setUploadCard(prev => !prev)} className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-700">Upload CSV data</button>
-                    <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm">New Report</button>
+                    <button type="button" onClick={() => setIsCreateReportOpen(true)} className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm">New Report</button>
                 </div>
             </div>
+            {isCreateRerportOpen && <CreateReportPanel onClose={() => setIsCreateReportOpen(false)}/>}
             {uploadCard && <UploadPanel onClose={() => setUploadCard(false)}/>}
                 <div className="grid grid-cols-2 gap-6 p-6">
                     <ReportsPanel/>
