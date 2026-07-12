@@ -71,6 +71,26 @@ export type CreateReport = {
 };
 
 /**
+ * DeleteOrdersRequest
+ */
+export type DeleteOrdersRequest = {
+    /**
+     * Ids
+     */
+    ids: Array<number>;
+};
+
+/**
+ * DeleteOrdersResponse
+ */
+export type DeleteOrdersResponse = {
+    /**
+     * Deleted
+     */
+    deleted: number;
+};
+
+/**
  * HTTPValidationError
  */
 export type HttpValidationError = {
@@ -84,6 +104,10 @@ export type HttpValidationError = {
  * OrdersPublic
  */
 export type OrdersPublic = {
+    /**
+     * Id
+     */
+    id: number;
     /**
      * Order Id
      */
@@ -187,6 +211,11 @@ export type ReportPublicWithData = {
 };
 
 /**
+ * Status
+ */
+export type Status = 'Success' | 'Failed';
+
+/**
  * Token
  */
 export type Token = {
@@ -198,6 +227,65 @@ export type Token = {
      * Token Type
      */
     token_type?: string;
+};
+
+/**
+ * UploadStatus
+ */
+export type UploadStatus = {
+    /**
+     * Chunk
+     */
+    chunk: number;
+    status: Status;
+    /**
+     * Inserted Rows
+     */
+    inserted_rows: number;
+    /**
+     * Reason
+     */
+    reason?: string | null;
+    /**
+     * Row Start
+     */
+    row_start: number;
+    /**
+     * Row End
+     */
+    row_end: number;
+};
+
+/**
+ * UploadStatusResponse
+ */
+export type UploadStatusResponse = {
+    /**
+     * Total Successful
+     */
+    total_successful: number;
+    /**
+     * Total Failed
+     */
+    total_failed: number;
+    /**
+     * Data
+     */
+    data: Array<UploadStatus>;
+};
+
+/**
+ * UserCreate
+ */
+export type UserCreate = {
+    /**
+     * Username
+     */
+    username: string;
+    /**
+     * Password
+     */
+    password: string;
 };
 
 /**
@@ -220,6 +308,28 @@ export type UserPublic = {
      * Is Superuser
      */
     is_superuser: boolean;
+};
+
+/**
+ * UserUpdate
+ */
+export type UserUpdate = {
+    /**
+     * Username
+     */
+    username?: string | null;
+    /**
+     * Password
+     */
+    password?: string | null;
+    /**
+     * Is Active
+     */
+    is_active?: boolean | null;
+    /**
+     * Is Superuser
+     */
+    is_superuser?: boolean | null;
 };
 
 /**
@@ -291,6 +401,113 @@ export type LoginTestTokenResponses = {
 
 export type LoginTestTokenResponse = LoginTestTokenResponses[keyof LoginTestTokenResponses];
 
+export type GetUsersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/users/';
+};
+
+export type GetUsersResponses = {
+    /**
+     * Response Getusers
+     *
+     * Successful Response
+     */
+    200: Array<UserPublic>;
+};
+
+export type GetUsersResponse = GetUsersResponses[keyof GetUsersResponses];
+
+export type CreateUserData = {
+    body: UserCreate;
+    path?: never;
+    query?: never;
+    url: '/api/v1/users/';
+};
+
+export type CreateUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CreateUserError = CreateUserErrors[keyof CreateUserErrors];
+
+export type CreateUserResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserPublic;
+};
+
+export type CreateUserResponse = CreateUserResponses[keyof CreateUserResponses];
+
+export type DeleteUserData = {
+    body?: never;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/api/v1/users/{user_id}';
+};
+
+export type DeleteUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type DeleteUserError = DeleteUserErrors[keyof DeleteUserErrors];
+
+export type DeleteUserResponses = {
+    /**
+     * Response Deleteuser
+     *
+     * Successful Response
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type DeleteUserResponse = DeleteUserResponses[keyof DeleteUserResponses];
+
+export type UpdateUserData = {
+    body: UserUpdate;
+    path: {
+        /**
+         * User Id
+         */
+        user_id: string;
+    };
+    query?: never;
+    url: '/api/v1/users/{user_id}';
+};
+
+export type UpdateUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UpdateUserError = UpdateUserErrors[keyof UpdateUserErrors];
+
+export type UpdateUserResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserPublic;
+};
+
+export type UpdateUserResponse = UpdateUserResponses[keyof UpdateUserResponses];
+
 export type UploadOrdersData = {
     body: BodyUploadOrders;
     path?: never;
@@ -309,16 +526,37 @@ export type UploadOrdersError = UploadOrdersErrors[keyof UploadOrdersErrors];
 
 export type UploadOrdersResponses = {
     /**
-     * Response Uploadorders
-     *
      * Successful Response
      */
-    200: {
-        [key: string]: unknown;
-    };
+    200: UploadStatusResponse;
 };
 
 export type UploadOrdersResponse = UploadOrdersResponses[keyof UploadOrdersResponses];
+
+export type DeleteOrdersData = {
+    body: DeleteOrdersRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/orders/';
+};
+
+export type DeleteOrdersErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type DeleteOrdersError = DeleteOrdersErrors[keyof DeleteOrdersErrors];
+
+export type DeleteOrdersResponses = {
+    /**
+     * Successful Response
+     */
+    200: DeleteOrdersResponse;
+};
+
+export type DeleteOrdersResponse2 = DeleteOrdersResponses[keyof DeleteOrdersResponses];
 
 export type GetOrdersData = {
     body?: never;
