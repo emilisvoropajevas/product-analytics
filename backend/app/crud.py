@@ -71,6 +71,8 @@ def authenticate(*, session: Session, username: str, password: str) -> User | No
 
 #Order Interaction and Uploads
 def upload_orders(*, session: Session, orders_in: list[dict]) -> dict:
+    if not orders_in:
+        return {"inserted_rows": 0}
     statement = insert(Orders).values(orders_in)
     statement = statement.on_conflict_do_nothing()
     result = session.exec(statement)

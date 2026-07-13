@@ -35,6 +35,7 @@ async def upload_to_db(file: UploadFile, session: SessionDep, current_user: Curr
                 status = UploadStatus(chunk=row_start, status=Status.success, inserted_rows=upload_chunk["inserted_rows"], reason=None, row_start=row_start, row_end=row_end)
                 chunk_status.append(status)
             except SQLAlchemyError as e:
+                session.rollback()
                 failed += 1
                 status = UploadStatus(chunk=row_start, status=Status.failed, inserted_rows=0, reason= str(e), row_start=row_start, row_end=row_end)
                 chunk_status.append(status)
@@ -44,7 +45,7 @@ async def upload_to_db(file: UploadFile, session: SessionDep, current_user: Curr
     if success > 0 and failed > 0:
         return JSONResponse(status_code=207, content=UploadStatusResponse(total_successful=success, total_failed=failed, data=chunk_status).model_dump())
     elif failed > 0 and success == 0:
-        raise HTTPException(status_code=500)
+        raise HTTPException(status_code=500, detail=f"{chunk_status}")
     return UploadStatusResponse(
         total_successful=success,
         total_failed=failed,
