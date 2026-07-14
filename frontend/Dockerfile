@@ -1,17 +1,17 @@
-FROM node:22-alpine
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json package-lock.json /app/
+COPY package*.json ./
 
 RUN npm ci
 
-COPY ./ /app/
+COPY . .
 
 ARG VITE_API_URL
 
 RUN npm run build
 
-EXPOSE 4173
-
-CMD [ "npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "4173" ]
+FROM caddy:2-alpine
+COPY --from=builder /app/dist /srv
+COPY Caddyfile /etc/caddy/Caddyfile

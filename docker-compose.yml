@@ -18,6 +18,8 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_DB=${POSTGRES_DB?Variable not set}
+    networks:
+      - internal
 
   prestart:
     build:
@@ -40,6 +42,8 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+    networks:
+      - internal
 
   backend:
     restart: always
@@ -61,14 +65,39 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
-    ports:
-      - "8000:8000"
+    networks:
+      - internal
 
     build:
       context: ./backend
       dockerfile: Dockerfile
+    
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+
+
 
 volumes:
   app-db-data:
+  caddy_data:
+  caddy_config:
 
 

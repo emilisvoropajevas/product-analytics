@@ -13,7 +13,7 @@ import "./index.css"
 import { routeTree } from './routeTree.gen'
 
 client.setConfig({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL || "",
   throwOnError: true,
   auth: async () => {
     return localStorage.getItem("access_token") || ""

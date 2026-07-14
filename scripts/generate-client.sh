@@ -4,9 +4,8 @@ set -e
 set -x
 
 cd backend
-uv run python -c "import app.main; import json; print(json.dumps(app.main.app.openapi()))" > ../openapi.json
-cd ..
-mv openapi.json frontend/
-cd frontend
+uv run python -c "import app.main; import json; print(json.dumps(app.main.app.openapi()))" > ../frontend/openapi.json
+cd ../frontend
 npm run generate-client
+rm openapi.json
 echo "Client Generated"
