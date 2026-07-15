@@ -130,7 +130,7 @@ export default function ReportChart({orders}: ReportChartProps) {
                 <div>
                     <p className="text-xs font-medium text-gray-500 mb-1">Y axis</p>
                     <div className="flex gap-1">
-                        {(["orders", "quantity", "revenue"] as YAxis[]).map(v => (
+                        {(["orders", "quantity"] as YAxis[]).map(v => (
                             <button
                                 key={v}
                                 onClick={() => setYAxis(v)}
