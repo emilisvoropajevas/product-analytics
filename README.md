@@ -6,7 +6,7 @@ A full-stack analytics platform for visualising and reporting on product order d
  
 - Admins upload CSV order data which is cleaned, validated, and stored in a database
 - Users create reports by filtering orders by date range, model range, and SKU
-- Reports render interactive charts — daily, weekly, monthly, or yearly trends — for order volume and quantity sold
+- Reports render interactive charts by daily, weekly, monthly, or yearly trends for order volume and quantity sold
 - Role-based access: admins manage data and users, standard users create and view reports
 ---
  
