@@ -30,9 +30,9 @@ function Dashboard() {
                     {isAdmin && (
                         <button type="button" onClick={() => setUploadCard(prev => !prev)} className="bg-gray-900 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-700">Upload CSV data</button>
                     )}
-                    <button type="button" onClick={() => setIsCreateReportOpen(true)} className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm">New Report</button>
+                    <button type="button" onClick={() => setIsCreateReportOpen(true)} className="border border-gray-300 text-gray-700 px-4 py-2 hover:bg-gray-200 rounded-md text-sm">New Report</button>
                     {isAdmin && (
-                        <button type="button" onClick={() => setIsOrdersOpen(true)} className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm">Manage Orders</button>
+                        <button type="button" onClick={() => setIsOrdersOpen(true)} className="border border-gray-300 text-gray-700 px-4 py-2 hover:bg-gray-200 rounded-md text-sm">Manage Orders</button>
                     )}
                 </div>
             </div>

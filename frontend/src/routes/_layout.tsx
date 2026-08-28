@@ -30,7 +30,9 @@ function Layout() {
             <nav className="flex items-center justify-between px-6 h-12 bg-gray-900 text-white font-bold">
                 <div className="flex gap-4">
                     <Link to="/"><span className="hover:text-zinc-700">Home</span></Link>
-                    <Link to="/users"> <span className="hover:text-zinc-700">Manage Users</span></Link>
+                    {isAdmin && (
+                        <Link to="/users"> <span className="hover:text-zinc-700">Manage Users</span></Link>
+                    )}
                 </div>
                 <div className="relative">
                     <button ref={buttonRef} onClick={() => setIsMenuOpen(prev => !prev)} className="rounded-full w-8 h-8 bg-blue-300 text-blue-700 text-sm hover:bg-white font-medium">
